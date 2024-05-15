@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<layout>
+    <adminhtml_samosa_index>
+        <reference name="content">
+            <block type="samosa/adminhtml_samosa" name="city_samosa"></block>
+        </reference>
+    </adminhtml_samosa_index>
+</layout>

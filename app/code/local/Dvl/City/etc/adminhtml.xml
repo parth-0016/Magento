@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<condig>
+    <menu>
+        <samosa translate="title" module="adminhtml">
+            <title>Samosa</title>
+            <action>adminhtml/samosa</action>
+        </samosa>
+    </menu>
+</condig>

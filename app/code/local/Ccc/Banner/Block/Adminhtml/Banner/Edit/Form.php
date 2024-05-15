@@ -9,15 +9,10 @@ class Ccc_Banner_Block_Adminhtml_Banner_Edit_Form extends Mage_Adminhtml_Block_W
         $this->setTitle(Mage::helper('banner')->__('Banner Information'));
     }
 
-    /**
-     * Load Wysiwyg on demand and Prepare layout
-     */
     protected function _prepareLayout()
     {
         parent::_prepareLayout();
-        // if (Mage::getSingleton('banner/wysiwyg_config')->isEnabled()) {
         $this->getLayout()->getBlock('head')->setCanLoadTinyMce(true);
-        // }
     }
 
     protected function _prepareForm()

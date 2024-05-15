@@ -1,0 +1,72 @@
+<?xml version = "1.0"?>
+
+<config>
+    <modules>
+        <Dvl_City>
+            <version>1.6.0.0.1</version>
+        </Dvl_City>
+    </modules>
+
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Dvl_City before="Mage_Adminhtml">Dvl_City_Adminhtml</Dvl_City>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+
+    <adminhtml>
+        <layout>
+            <updates>
+                <city>
+                    <file>city.xml</file>
+                </city>
+            </updates>
+        </layout>
+    </adminhtml>
+    <frontend>
+        <layout>
+            <updates>
+                <city>
+                    <file>city.xml</file>
+                </city>
+            </updates>
+        </layout>
+
+        <routers>
+            <catalog>
+                <args>
+                    <modules>
+                        <Dvl_City before="Mage_Catalog">Dvl_City</Dvl_City>
+                    </modules>
+                </args>
+            </catalog>
+        </routers>
+    </frontend>
+
+    <global>
+        <blocks>
+            <samosa>
+                <class>Dvl_City_Block</class>
+            </samosa>
+        </blocks>
+        
+        <resources>
+            <city_setup>
+                <setup>
+                    <module>Dvl_City</module>
+                    <class>Mage_Eav_Model_Entity_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </city_setup>
+        </resources>
+
+    </global>
+
+</config>

@@ -36,10 +36,6 @@
             <banner>
                 <class>Ccc_Banner_Block</class>
             </banner>
-
-            <form>
-                <class>Ccc_Banner_Edit</class>
-            </form>
         </blocks>
 
         <helpers>

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <salesman translate="label" module="salesman">
+            <label>Salesman</label>
+            <sort_order>10</sort_order>
+        </salesman>
+    </tabs>
+    <sections>
+        <salesman translate="label" module="salesman">
+            <label>Bonus Configuration</label>
+            <tab>salesman</tab>
+            <sort_order>100</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <bonus translate="label" module="salesman">
+                    <label>Bonus Options</label>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <amount translate="label" module="salesman">
+                            <label>Bonus Amount</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </amount>
+                    </fields>
+                </bonus>
+            </groups>
+        </salesman>
+    </sections>
+</config>
