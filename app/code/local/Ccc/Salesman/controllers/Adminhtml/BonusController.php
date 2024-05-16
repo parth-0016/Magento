@@ -101,6 +101,11 @@ class Ccc_Salesman_Adminhtml_BonusController extends Mage_Adminhtml_Controller_A
 
     public function dataAction(){
         $bonus = Mage::getStoreConfig('salesman/bonus/amount');
-        print_r(json_encode($this->getRequest()->getParams()));
+        $cardData = json_decode($this->getRequest()->getParam('data'),true);
+        // echo "<pre>";
+        // print_r($cardData);
+        // echo "</pre>";
+        $response['success'] = true;
+        echo json_encode($response);
     }
 }

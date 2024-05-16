@@ -223,19 +223,19 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  var initialRowOrder = [];
+  var leagueData = {};
   tables.forEach((table) => {
     var leagueName = table.getAttribute("name");
-    initialRowOrder[leagueName] = [];
-    if (!initialRowOrder[leagueName]) {
-      initialRowOrder[leagueName] = [];
-    }
-    var userNames = Array.from(
-      table.querySelectorAll(".draggable-row .td-class")
-    ).map((row) => row.getAttribute("value"));
-    var bonusDefaultValue = document.getElementsByClassName("selectBonus")[0].value;
-    initialRowOrder[leagueName] = userNames;
-    initialRowOrder[leagueName][userNames] = bonusDefaultValue;
+      var users = [];
+      var bonus = {};
+
+      table.querySelectorAll(".draggable-row").forEach((row) => {
+        var username = row.querySelector(".td-class").getAttribute("value");
+        var bonusValue = row.querySelector(".selectBonus").value;
+        users.push(username);
+        bonus[username] = bonusValue;
+      });
+      leagueData[leagueName] = { users, bonus };
 
     table.addEventListener("dragover", (event) => {
       event.preventDefault();
@@ -243,7 +243,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     table.addEventListener("drop", (event) => {
       event.preventDefault();
-      var bonusArrayValue = document.getElementById("bonusArray").value;
 
       const draggableRow = document.querySelector(".dragging");
       const afterElement = getElementAfterDrag(table, event.clientY);
@@ -257,12 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
         table.insertBefore(draggableRow, afterElement);
       }
       
-      updateLeagueRows(
-        initialRowOrder,
-        leagueName,
-        table.querySelectorAll(".draggable-row .td-class"),
-        bonusArrayValue
-      );
+      updateLeagueRows();
     });
 
     var bonusDropdowns = table.querySelectorAll(".selectBonus");
@@ -273,12 +267,12 @@ document.addEventListener("DOMContentLoaded", function () {
           .querySelector(".td-class")
           .getAttribute("value");
         var bonusValue = dropdown.value;
-        initialRowOrder[username] = bonusValue;
         console.log(username, bonusValue);
+        updateLeagueRows();
       });
     });
   });
-  console.log(initialRowOrder);
+  console.log(leagueData);
 
   function getElementAfterDrag(table, y) {
     const draggables = [
@@ -297,14 +291,28 @@ document.addEventListener("DOMContentLoaded", function () {
       { offset: Number.NEGATIVE_INFINITY }
     ).element;
   }
-  function updateLeagueRows(initialRowOrder, leagueName, rows, bonusArrayValue) {
-    var userNames = Array.from(rows).map((row) => row.getAttribute("value"));
-    initialRowOrder[leagueName] = userNames;
-    console.log(initialRowOrder);
+
+  function updateLeagueRows() {
+    leagueData = {};
+    tables.forEach((table) => {
+      var leagueName = table.getAttribute("name");
+      var users = [];
+      var bonus = {};
+
+      table.querySelectorAll(".draggable-row").forEach((row) => {
+        var username = row.querySelector(".td-class").getAttribute("value");
+        var bonusValue = row.querySelector(".selectBonus").value;
+        users.push(username);
+        bonus[username] = bonusValue;
+      });
+
+      leagueData[leagueName] = { users, bonus };
+    });
+    console.log(leagueData);
   }
 
   jQuery("#sendDataButton").click(function () {
-    var jsonString = JSON.stringify(Object.assign({}, initialRowOrder));
+    var jsonString = JSON.stringify(Object.assign({}, leagueData));
     sendDataToController(sendDataUrl, jsonString);
   });
 
@@ -314,7 +322,8 @@ document.addEventListener("DOMContentLoaded", function () {
     var idIndex = parts.indexOf("id");
     var idValue = parts[idIndex + 1];
 
-    var jsonData = JSON.stringify(Object.assign({}, initialRowOrder));
+    var jsonData = JSON.stringify(Object.assign({}, leagueData));
+    // console.log(jsonData);
     jQuery.ajax({
       url: Url + "form_key/" + FORM_KEY,
       type: "POST",
@@ -332,5 +341,4 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     });
   }
-  
 }); 

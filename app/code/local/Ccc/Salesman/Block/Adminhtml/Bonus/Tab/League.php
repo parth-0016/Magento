@@ -13,17 +13,16 @@ class Ccc_Salesman_Block_Adminhtml_Bonus_Tab_League extends Mage_Adminhtml_Block
         $data = Mage::getModel('salesman/bonus')->load($id);
         return $data->getUsersInLeague();   
     }
+    
     public function CreateCollection()
     {
         $id = $this->getRequest()->getParam('id');
-
         $data = Mage::getModel('salesman/bonus')->load($id);
         $group = $data->getUsersInLeague();
         $bonusMetric = $data->getMetric();
 
         $collection = Mage::getModel('salesman/commission')->getCollection();
 
-        // Create the inner query to select all columns and group by order_id
         $subquery = clone $collection->getSelect();
         $subquery->reset(); // Reset any previous select queries
         $subquery->from(array('main_table' => $collection->getMainTable()))
@@ -33,15 +32,14 @@ class Ccc_Salesman_Block_Adminhtml_Bonus_Tab_League extends Mage_Adminhtml_Block
                 array('username' => 'salesman.username')
             )
             ->group('user_id');
-
         $data = [];
+        
         switch ($bonusMetric) {
             case 'Total Worked Orders':
                 $subquery->columns(array(
                     'total upsold' => new Zend_Db_Expr('SUM(upsold)')
                 ));
                 $subquery->having(new Zend_Db_Expr('SUM(upsold) > 0'));
-
                 $subquery->reset(Zend_Db_Select::GROUP);
                 $subquery->group('order_id');
                 $mainSelect = $collection->getSelect();
@@ -54,10 +52,7 @@ class Ccc_Salesman_Block_Adminhtml_Bonus_Tab_League extends Mage_Adminhtml_Block
                     ->order('total_worked_orders DESC');
 
                 $data = Mage::getSingleton('core/resource')->getConnection('core_read')->fetchAll($mainSelect);
-
                 break;
-
-
 
             case 'Total Upsell Orders':
                 $subquery->columns(array(
@@ -75,7 +70,6 @@ class Ccc_Salesman_Block_Adminhtml_Bonus_Tab_League extends Mage_Adminhtml_Block
                     ->order('total_upsell_orders DESC');
 
                 $data = Mage::getSingleton('core/resource')->getConnection('core_read')->fetchAll($mainSelect);
-
                 break;
 
             case "Total Commission Orders":
@@ -95,7 +89,6 @@ class Ccc_Salesman_Block_Adminhtml_Bonus_Tab_League extends Mage_Adminhtml_Block
                     ->order('total_commission_orders DESC');
 
                 $data = Mage::getSingleton('core/resource')->getConnection('core_read')->fetchAll($mainSelect);
-
                 break;
 
             case "Total Upsold":
@@ -105,7 +98,6 @@ class Ccc_Salesman_Block_Adminhtml_Bonus_Tab_League extends Mage_Adminhtml_Block
                     ->order('total upsold DESC');
 
                 $data = Mage::getSingleton('core/resource')->getConnection('core_read')->fetchAll($subquery);
-
                 break;
 
             case "Total Commission":
@@ -114,8 +106,6 @@ class Ccc_Salesman_Block_Adminhtml_Bonus_Tab_League extends Mage_Adminhtml_Block
                 ))
                     ->order('total commission DESC');
                 $data = Mage::getSingleton('core/resource')->getConnection('core_read')->fetchAll($subquery);
-
-
                 break;
 
             case "Product Upsold":
@@ -124,8 +114,6 @@ class Ccc_Salesman_Block_Adminhtml_Bonus_Tab_League extends Mage_Adminhtml_Block
                 ))
                     ->order('product upsold DESC');
                 $data = Mage::getSingleton('core/resource')->getConnection('core_read')->fetchAll($subquery);
-
-
                 break;
 
             case "Shipping Upsold":
@@ -134,8 +122,6 @@ class Ccc_Salesman_Block_Adminhtml_Bonus_Tab_League extends Mage_Adminhtml_Block
                 ))
                     ->order('shipping upsold DESC');
                 $data = Mage::getSingleton('core/resource')->getConnection('core_read')->fetchAll($subquery);
-
-
                 break;
 
             case "Tax Upsold":
@@ -144,8 +130,6 @@ class Ccc_Salesman_Block_Adminhtml_Bonus_Tab_League extends Mage_Adminhtml_Block
                 ))
                     ->order('tax upsold DESC');
                 $data = Mage::getSingleton('core/resource')->getConnection('core_read')->fetchAll($subquery);
-
-
                 break;
 
             case "Product Commission":
@@ -154,8 +138,6 @@ class Ccc_Salesman_Block_Adminhtml_Bonus_Tab_League extends Mage_Adminhtml_Block
                 ))
                     ->order('product commission DESC');
                 $data = Mage::getSingleton('core/resource')->getConnection('core_read')->fetchAll($subquery);
-
-
                 break;
 
             case "Shipping Commission":
@@ -164,8 +146,6 @@ class Ccc_Salesman_Block_Adminhtml_Bonus_Tab_League extends Mage_Adminhtml_Block
                 ))
                     ->order('shipping commission DESC');
                 $data = Mage::getSingleton('core/resource')->getConnection('core_read')->fetchAll($subquery);
-
-
                 break;
 
             case "Tax Commission":
@@ -174,15 +154,11 @@ class Ccc_Salesman_Block_Adminhtml_Bonus_Tab_League extends Mage_Adminhtml_Block
                 ))
                     ->order('tax commission DESC');
                 $data = Mage::getSingleton('core/resource')->getConnection('core_read')->fetchAll($subquery);
-
-
                 break;
 
             default:
                 $subquery->where('1 = 0');
                 $data = Mage::getSingleton('core/resource')->getConnection('core_read')->fetchAll($subquery);
-
-
                 break;
         }
         return $data;
