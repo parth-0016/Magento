@@ -21,16 +21,6 @@ class Ccc_Promotions_Block_Adminhtml_Promotions_Grid extends Mage_Adminhtml_Bloc
     protected function _prepareColumns()
     {
         $this->addColumn(
-            'id',
-            array(
-                'header' => Mage::helper('promotions')->__('ID'),
-                'align' => 'right',
-                'width' => '50px',
-                'index' => 'id',
-            )
-        );
-
-        $this->addColumn(
             'tag_name',
             array(
                 'header' => Mage::helper('promotions')->__('Name'),

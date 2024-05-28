@@ -127,19 +127,19 @@ class Ccc_Promotions_Adminhtml_PromotionsController extends Mage_Adminhtml_Contr
     {
         $aclResource = '';
         $action = strtolower($this->getRequest()->getActionName());
-        switch ($action) {
-            case 'promotions':
-                $aclResource = 'admin/catalog/promotions/promotions';
-                break;
+            switch ($action) {
+                case 'promotions':
+                    $aclResource = 'admin/catalog/promotions/promotions';
+                    break;
 
-            case 'report':
-                $aclResource = 'admin/catalog/promotions/report';
-                break;
+                case 'report':
+                    $aclResource = 'admin/catalog/promotions/report';
+                    break;
 
-            default:
-                $aclResource = 'admin/catalog/promotions/promotions';
-                break;
-        }
+                default:
+                    $aclResource = 'admin/catalog/promotions/promotions';
+                    break;
+            }
         return Mage::getSingleton('admin/session')->isAllowed($aclResource);
     }
 
@@ -159,7 +159,7 @@ class Ccc_Promotions_Adminhtml_PromotionsController extends Mage_Adminhtml_Contr
         $products = Mage::getModel('catalog/product')->getCollection()
             ->addAttributeToSelect(array('name', 'price', 'special_price'))
             ->addAttributeToFilter('active_tag', $tagId);
-            
+
         $productData = [];
         foreach ($products as $product) {
             $productData[] = [
@@ -180,16 +180,16 @@ class Ccc_Promotions_Adminhtml_PromotionsController extends Mage_Adminhtml_Contr
         $tagName = $this->getRequest()->getParam('tag');
         $attribute = Mage::getSingleton('eav/config')->getAttribute('catalog_product', 'active_tag');
         $tagId = $attribute->getSource()->getOptionId($tagName);
-        
+
         $product = Mage::getModel('catalog/product')->loadByAttribute('sku', $sku);
         if ($product) {
             $product->setData('active_tag', $tagId);
             $product->save();
-            
+
             $response = array();
             $response['success'] = true;
             $response['message'] = 'Tag assigned successfully.';
-        }else{
+        } else {
             $response['success'] = false;
             $response['message'] = 'Invalid SKU, Failed to assign Tag.';
         }

@@ -1,3 +1,51 @@
+<style>
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 1em;
+    font-family: Arial, sans-serif;
+    border: 1px solid #ddd;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.styled-table thead tr {
+    background-color: #f2f2f2;
+    border-bottom: 2px solid #ddd;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f9f9f9;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #ddd;
+}
+
+.header-cell {
+    font-weight: bold;
+    background-color: #f2f2f2;
+    border-bottom: 2px solid #ddd;
+}
+
+.body-cell {
+    border-bottom: 1px solid #ddd;
+}
+
+.body-row:nth-of-type(even) {
+    background-color: #f9f9f9;
+}
+</style>
+
 <?php
 $options = $this->getTags();
 ?>

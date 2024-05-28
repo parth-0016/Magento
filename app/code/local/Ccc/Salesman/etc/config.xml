@@ -51,7 +51,7 @@
                 </observers>
             </order_cancel_after>
 
-            <admin_user_save_after>
+            <!-- <admin_user_save_after>
                 <observers>
                     <salesman>
                         <type>singleton</type>
@@ -59,7 +59,7 @@
                         <method>assignPercentage</method>
                     </salesman>
                 </observers>
-            </admin_user_save_after>
+            </admin_user_save_after> -->
         </events>
 
         <helpers>
