@@ -135,28 +135,41 @@ salesConfig.prototype = {
 
 var createCards = new Class.create();
 createCards.prototype = {
-  initialize: function (cardData, usersInLeague, Url) {
+  initialize: function (cardData, usersInLeague, Url, Rank) {
     this.usersInLeague = usersInLeague;
     this.cardData = cardData;
     this.Url = Url;
-    this.createGroupData(this.cardData, this.usersInLeague, this.Url);
+    this.Rank = Rank;
+    this.createGroupData(this.cardData, this.usersInLeague, this.Url, this.Rank);
   },
 
-  createGroupData: function (data, usersInLeague, Url) {
+  createGroupData: function (data, usersInLeague, Url, Rank) {
     data = JSON.parse(data);
+
+    if (data.length > Rank) {
+      return;
+    }
+
     var cardContainer = $$(".cards")[0];
+    var buttonContainer = $$(".submitData")[0];
+    var submitButton = new Element("input", {
+      type: "submit",
+      id: "sendDataButton",
+      class: "form-button",
+    });
+    buttonContainer.insert(submitButton);
 
     for (var i = 0; i < Math.ceil(data.length / usersInLeague); i++) {
       var table = new Element("table", {
         class: "draggable-table",
         border: "1",
         style: "margin: 20px; border-collapse: collapse;",
-        id: "table_" + i,
-        name: "league_" + (i + 1),
+        name: "table_" + i,
+        id: "league_" + (i + 1),
       });
 
       var tr = new Element("tr", {
-        style: "background-color: #f2f2f2;",
+        style: "background-color: #f2f2f2; cursor: grab",
       });
       var th = new Element("th", {
         class: "draggable-header",
@@ -171,39 +184,42 @@ createCards.prototype = {
         j < Math.min((i + 1) * usersInLeague, data.length);
         j++
       ) {
-        var tr = new Element("tr", {
-          class: "draggable-row",
-          draggable: "true",
-        });
-        var tdUsername = new Element("td", {
-          class: "td-class",
-          value: data[j].username,
-          style: "padding: 8px; text-align: center; width: 100px",
-        }).update(data[j].username);
-        tr.insert(tdUsername);
-
-        var tdBonus = new Element("td", {
-          class: "bonusArray",
-          id: "bonusArray",
-          default: "0",
-          style: "padding: 8px; text-align: center; width: 100px",
-        });
-        var bonusDropdown = new Element("select", {
-          id: "selectBonus",
-          class: "selectBonus",
-          name: "bonus",
-          style: "width: 100px",
-        });
-        var bonusArray = bonusArrayString.split(",");
-        bonusArray.forEach(function (bonusValue) {
-          var option = new Element("option", {
-            value: bonusValue,
-          }).update(bonusValue);
-          bonusDropdown.insert(option);
-        });
-        tdBonus.insert(bonusDropdown);
-        tr.insert(tdBonus);
-        table.insert(tr);
+          var tr = new Element("tr", {
+            class: "draggable-row",
+            draggable: "true",
+            style: "cursor: grab",
+          });
+          var tdUsername = new Element("td", {
+            class: "td-class",
+            value: data[j].username,
+            style: "padding: 8px; text-align: center; width: 100px",
+          }).update(data[j].username);
+          tr.insert(tdUsername);
+          var tdBonus = new Element("td", {
+            class: "bonusArray",
+            id: "bonusArray",
+            default: "0",
+            style: "padding: 8px; text-align: center; width: 100px",
+          });
+          var bonusDropdown = new Element("select", {
+            id: "selectBonus",
+            class: "selectBonus",
+            name: "bonus",
+            style: "width: 100px",
+          });
+          var bonusArray = bonusArrayString.split(",");
+          bonusArray.forEach(function (bonusValue) {
+            var option = new Element("option", {
+              value: bonusValue,
+            }).update(bonusValue);
+            if (bonusValue === data[j].bonus) {
+              option.selected = true;
+            }
+            bonusDropdown.insert(option);
+          });
+          tdBonus.insert(bonusDropdown);
+          tr.insert(tdBonus);
+          table.insert(tr);
       }
       cardContainer.insert(table);
     }
@@ -225,17 +241,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
   var leagueData = {};
   tables.forEach((table) => {
-    var leagueName = table.getAttribute("name");
-      var users = [];
-      var bonus = {};
+    var leagueName = table.getAttribute("id");
+    var users = [];
+    var bonus = {};
 
-      table.querySelectorAll(".draggable-row").forEach((row) => {
-        var username = row.querySelector(".td-class").getAttribute("value");
-        var bonusValue = row.querySelector(".selectBonus").value;
-        users.push(username);
-        bonus[username] = bonusValue;
-      });
-      leagueData[leagueName] = { users, bonus };
+    table.querySelectorAll(".draggable-row").forEach((row) => {
+      var username = row.querySelector(".td-class").getAttribute("value");
+      var bonusValue = row.querySelector(".selectBonus").value;
+      users.push(username);
+      bonus[username] = bonusValue;
+    });
+    leagueData[leagueName] = { users, bonus };
 
     table.addEventListener("dragover", (event) => {
       event.preventDefault();
@@ -255,8 +271,15 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         table.insertBefore(draggableRow, afterElement);
       }
-      
       updateLeagueRows();
+      for (let table in leagueData) {
+        if (
+          document.querySelectorAll("#" + table + " .draggable-row").length >=
+          userInLeague
+        ) {
+          document.getElementById(table).style.backgroundColor = "lightcoral";
+        }
+      }
     });
 
     var bonusDropdowns = table.querySelectorAll(".selectBonus");
@@ -295,7 +318,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function updateLeagueRows() {
     leagueData = {};
     tables.forEach((table) => {
-      var leagueName = table.getAttribute("name");
+      var leagueName = table.getAttribute("id");
       var users = [];
       var bonus = {};
 
@@ -323,7 +346,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var idValue = parts[idIndex + 1];
 
     var jsonData = JSON.stringify(Object.assign({}, leagueData));
-    // console.log(jsonData);
+    // console.log(leagueData);
     jQuery.ajax({
       url: Url + "form_key/" + FORM_KEY,
       type: "POST",
@@ -341,4 +364,4 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     });
   }
-}); 
+});

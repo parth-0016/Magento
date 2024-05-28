@@ -10,4 +10,12 @@ class Ccc_Salesman_Model_Metric extends Mage_Core_Model_Abstract
     {
         $this->_init('salesman/metric');
     }
+
+    public function getMetrics(){
+        return [
+            self::PRODUCT_METRIC,
+            self::SHIPPING_METRIC,
+            self::TAX_METRIC
+        ];   
+    }
 }

@@ -41,6 +41,7 @@ class Ccc_Salesman_Adminhtml_MetricController extends Mage_Adminhtml_Controller_
         $this->_title($model->getId() ? $model->getTitle() : $this->__('New Salesman'));
         
         $data = Mage::getSingleton('adminhtml/session')->getFormData(true);
+        // die;
         if (!empty($data)) {
             $model->setData($data);
         }
@@ -68,7 +69,6 @@ class Ccc_Salesman_Adminhtml_MetricController extends Mage_Adminhtml_Controller_
             if ($id = $this->getRequest()->getParam('entity_id')) {
                 $model->load($id);
             }
-
             $model->setData($data);
 
             try {

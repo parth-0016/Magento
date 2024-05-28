@@ -1,0 +1,23 @@
+<?php
+$options = $this->getTags();
+?>
+
+<select id="activeTagDropdown">
+    <option value="">Select Active Tag</option>
+    <?php foreach ($options as $id => $name): ?>
+    <option value="<?php echo $name; ?>"><?php echo $name; ?></option>
+    <?php endforeach; ?>
+</select>
+<button id="loadReportButton">Load Report</button>
+<div id="productReport"></div>
+<br>
+<?php $value = Mage::getStoreConfig('promotion/tag_settings/allow_tag_assignment');
+if($value){ ?>
+<input type="text" id="skuInput" placeholder="Enter SKU">
+<button id="assignTagButton">Assign Tag</button>
+<div id="assignSkuReport"></div>
+<?php } ?>
+<script type="text/javascript">
+var loadReportUrl = '<?php echo Mage::getUrl('*/*/loadReport'); ?>';
+var assignTagUrl = '<?php echo Mage::getUrl('*/*/assignTag'); ?>';
+</script>

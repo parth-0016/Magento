@@ -1,0 +1,95 @@
+<config>
+    <modules>
+        <Ccc_Promotions>
+            <version>1.6.0.0.2</version>
+        </Ccc_Promotions>
+    </modules>
+
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Ccc_Promotions before="Mage_Adminhtml">Ccc_Promotions_Adminhtml</Ccc_Promotions>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers> 
+    </admin>
+
+    <adminhtml>
+        <layout>
+            <updates>
+                <promotions>
+                    <file>promotion.xml</file>
+                </promotions>
+            </updates>
+        </layout>
+
+        <events>
+            <catalog_product_save_before>
+                <observers>
+                    <promotions>
+                        <type>singleton</type>
+                        <class>Ccc_Promotions_Model_Observer</class>
+                        <method>updateSpecialPrice</method>
+                    </promotions>
+                </observers>
+            </catalog_product_save_before>
+        </events>
+    </adminhtml>
+    <frontend>
+        <layout>
+            <updates>
+                <promotions>
+                    <file>promotions.xml</file>
+                </promotions>
+            </updates>
+        </layout>
+    </frontend>
+    <global>
+        <helpers>
+            <promotions>
+                <class>Ccc_Promotions_Helper</class>
+            </promotions>
+        </helpers>
+
+        <models>
+            <promotions>
+                <class>Ccc_Promotions_Model</class>
+                <resourceModel>promotions_resource</resourceModel>
+            </promotions>
+            <promotions_resource>
+                <class>Ccc_Promotions_Model_Resource</class>
+                <entities>
+                    <promotions>
+                        <table>ccc_promotions</table>
+                    </promotions>
+                </entities>
+            </promotions_resource>
+        </models>
+
+        <resources>
+            <promotions_setup>
+                <setup>
+                    <module>Ccc_Promotions</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </promotions_setup>
+        </resources>
+
+        <blocks>
+            <promotions>
+                <class>Ccc_Promotions_Block</class>
+            </promotions>
+            <adminhtml>
+                <rewrite>
+                    <catalog_product_grid>Ccc_Promotions_Block_Adminhtml_Grid</catalog_product_grid>
+                </rewrite>
+            </adminhtml>
+        </blocks>
+
+    </global>
+</config>

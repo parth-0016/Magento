@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<layout>
+
+	<adminhtml_promotions_index>
+		<reference name="content">
+            <block type="promotions/adminhtml_promotions" name="promotion_grid"></block>
+        </reference>
+	</adminhtml_promotions_index>
+
+	<adminhtml_promotions_edit>
+		<reference name="content">
+            <block type="promotions/adminhtml_promotions_edit" name="promotion_grid_edit"></block>
+        </reference>
+	</adminhtml_promotions_edit>
+
+	<adminhtml_promotions_new>
+		<update handle="adminhtml_promotions_edit" />
+	</adminhtml_promotions_new>
+
+	<adminhtml_promotions_report>
+		<reference name="head">
+			<action method="addJs">
+                <src>lib/jquery/jquery-1.12.1.min.js</src>
+            </action>
+            <action method="addJs">
+                <src>lib/jquery/noconflict.js</src>
+            </action>
+            <action method="addJs">
+                <file>promotions/report.js</file>
+            </action>
+		</reference>
+		<reference name="content">
+            <block type="promotions/adminhtml_report" name="report_grid" template="promotions/report.phtml"></block>
+        </reference>
+	</adminhtml_promotions_report>
+
+</layout>

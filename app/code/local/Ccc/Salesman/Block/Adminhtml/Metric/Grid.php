@@ -13,6 +13,7 @@ class Ccc_Salesman_Block_Adminhtml_Metric_Grid extends Mage_Adminhtml_Block_Widg
     protected function _prepareCollection()
     {
         $collection = Mage::getModel('salesman/metric')->getCollection();
+        $collection->setOrder('user_id', 'ASC');
         $this->setCollection($collection);
         return parent::_prepareCollection();
     }

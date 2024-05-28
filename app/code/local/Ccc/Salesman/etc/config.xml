@@ -2,7 +2,7 @@
     
     <modules>
         <Ccc_Salesman>
-            <version>1.6.0.0.4</version>
+            <version>1.6.0.0.7</version>
         </Ccc_Salesman>
     </modules>
 
@@ -26,21 +26,21 @@
                 </salesman>
             </updates>
         </layout>
+
+        <sales_order_place_after>
+            <observers>
+                <salesman>
+                    <type>singleton</type>
+                    <class>Ccc_Salesman_Model_Commission_Observer</class>
+                    <method>addCommissionToOrder</method>
+                </salesman>
+            </observers>
+        </sales_order_place_after>
     </adminhtml>
     
     <global>
 
         <events>
-            <sales_order_place_after>
-                <observers>
-                    <salesman>
-                        <type>singleton</type>
-                        <class>Ccc_Salesman_Model_Commission_Observer</class>
-                        <method>addCommissionToOrder</method>
-                    </salesman>
-                </observers>
-            </sales_order_place_after>
-
             <order_cancel_after>
                 <observers>
                     <salesman>
@@ -50,6 +50,16 @@
                     </salesman>
                 </observers>
             </order_cancel_after>
+
+            <admin_user_save_after>
+                <observers>
+                    <salesman>
+                        <type>singleton</type>
+                        <class>Ccc_Salesman_Model_Observer</class>
+                        <method>assignPercentage</method>
+                    </salesman>
+                </observers>
+            </admin_user_save_after>
         </events>
 
         <helpers>
@@ -75,6 +85,12 @@
                     <salesman_bonus_configuration>
                         <table>salesman_bonus_configuration</table>
                     </salesman_bonus_configuration>
+                    <salesman_bonus_league_user>
+                        <table>salesman_bonus_league_user</table>
+                    </salesman_bonus_league_user>
+                    <salesman_bonus_league>
+                        <table>salesman_bonus_league</table>
+                    </salesman_bonus_league>
                 </entities>
             </salesman_resource>
         </models>
@@ -94,20 +110,43 @@
             <salesman>
                 <class>Ccc_Salesman_Block</class>
             </salesman>
+            <adminhtml>
+                <rewrite>
+                    <sales_order_grid>Ccc_Salesman_Block_Adminhtml_SalesOrderGrid</sales_order_grid>
+                </rewrite>
+            </adminhtml>
         </blocks>
 
     </global>
 
     <crontab>
         <jobs>
-            <salesperson_calculate_rank>
+            <salesman_rank>
                 <schedule>
                     <cron_expr>*/1 * * * *</cron_expr>
                 </schedule>
                 <run>
                     <model>salesman/observer::saveNewData</model>
                 </run>
-            </salesperson_calculate_rank>
+            </salesman_rank>
+
+            <before_end_date>
+                <schedule>
+                    <cron_expr>*/1    </cron_expr>
+                </schedule>
+                <run>
+                    <model>salesman/scheduler::saveBefore</model>
+                </run>
+            </before_end_date>
+
+            <after_end_date>
+                <schedule>
+                    <cron_expr>1  /1  </cron_expr>
+                </schedule>
+                <run>
+                    <model>salesman/scheduler::saveAfterEndDate</model>
+                </run>
+            </after_end_date>
         </jobs>
     </crontab>
 

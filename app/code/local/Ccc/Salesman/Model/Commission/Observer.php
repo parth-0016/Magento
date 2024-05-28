@@ -19,18 +19,22 @@ class Ccc_Salesman_Model_Commission_Observer
         $taxItem = $metricCollection->getItemByColumnValue('metric', Ccc_Salesman_Model_Metric::TAX_METRIC);
         $taxPercentage = $taxItem ? $taxItem->getPercentage() : 0;
 
-        $metric = $metricCollection->getData('metric');
-
         //product
         foreach ($items as $item) {
             $quantity = $item->getQtyOrdered();
             $metric = Ccc_Salesman_Model_Metric::PRODUCT_METRIC;
             $productId = $item->getProductId();
+            $product = Mage::getModel('catalog/product')->load($item->getProductId());
+            $optionValue = $product->getAttributeText('is_low_seller_product');
             $oldPrice = $item->getOriginalPrice();
             $description = 'Commission for product ID ' . $productId;
             $newPrice = $item->getBasePrice();
             $upsold = $quantity * ($newPrice - $oldPrice);
             $commissionAmount = ($upsold) * ($productPercentage / 100);
+            if($optionValue){
+                $productPercentage+=5;
+                $commissionAmount = ($upsold) * ($productPercentage / 100);
+            }
 
             $this->addCommission($order->getId(), $userId, $productId, $metric, $oldPrice, $description, $newPrice, $upsold, $productPercentage, $commissionAmount);
         }

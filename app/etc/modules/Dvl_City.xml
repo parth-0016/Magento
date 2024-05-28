@@ -1,7 +1,7 @@
 <config>
   <modules>
     <Dvl_City>
-      <active>true</active>
+      <active>false</active>
       <codePool>local</codePool>
       <version>1.6.0.0.1</version>
     </Dvl_City>

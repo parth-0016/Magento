@@ -44,17 +44,14 @@ class Ccc_Salesman_Block_Adminhtml_Report_Grid extends Mage_Adminhtml_Block_Widg
         foreach ($columns as $alias => $expression) {
             $collection->getSelect()->columns(array($alias => new Zend_Db_Expr($expression)));
         }
-
+        
         $collection->addFilterToMap('created_at', 'main_table.created_at');
-        // echo $collection->getSelect()->__toString();
-
         $filter = $this->getParam($this->getVarNameFilter(), null);
 
         $data = [];
         if (is_string($filter)) {
             $data = $this->helper('adminhtml')->prepareFilterString($filter);
         }
-
         $dateFilterApplied = false;
         $salesmen = [];
         foreach ($data as $key => $value) {
@@ -66,13 +63,16 @@ class Ccc_Salesman_Block_Adminhtml_Report_Grid extends Mage_Adminhtml_Block_Widg
                 $salesmen[] = $salesman;
             }
         }
+        if (Mage::getSingleton('admin/session')->isAllowed('salesman/commission/actions/salesman')) {
+            $salesman = Mage::getSingleton('admin/session')->getUser()->getUsername();
+        }
 
         if ($dateFilterApplied && !empty($salesmen)) {
             $collection->addFieldToFilter('username', ['in' => $salesmen]);
         } else {
             $collection->addFieldToFilter('main_table.entity_id', ['eq' => 0]);
         }
-        // echo $collection->getSelect()->__toString();
+
         $this->setCollection($collection);
 
         return parent::_prepareCollection();
@@ -252,7 +252,7 @@ class Ccc_Salesman_Block_Adminhtml_Report_Grid extends Mage_Adminhtml_Block_Widg
         }
         $upsoldPercentage = ($totalOrders > 0) ? round(($upsoldOrders / $totalOrders) * 100, 2) : 0;
 
-        $summaryData = array(
+        return array(
             'today_rank' => '-',
             'upsold_orders' => "$upsoldOrders/$totalOrders - $upsoldPercentage%",
             'product_upsold' => $this->_totals['product_upsold'],
@@ -263,7 +263,6 @@ class Ccc_Salesman_Block_Adminhtml_Report_Grid extends Mage_Adminhtml_Block_Widg
             'total_commission' => $this->_totals['total_commission'],
             'avg_commission' => round($this->_totals['avg_commission'], 2)
         );
-        return $summaryData;
     }
 
     public function getSalesmanData()

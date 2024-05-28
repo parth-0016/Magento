@@ -75,16 +75,22 @@
 </div>
 
 <div>
+
+    <?php if(Mage::getSingleton('admin/session')->isAllowed('salesman/commission/actions/from')){ ?>
     <label for="date_from">
         <b><?php echo $this->__('From:') ?></b>
     </label>
     <input type="date" id="filter_date_from" name="created_at[from]" class="input-text" />
+    <?php } ?>
 
+    <?php if(Mage::getSingleton('admin/session')->isAllowed('salesman/commission/actions/to')){ ?>
     <label for="date_to">
         <b style="margin-left: 10px;"><?php echo $this->__('To:') ?></b>
     </label>
     <input type="date" id="filter_date_to" name="created_at[to]" class="input-text" />
+    <?php } ?>
 
+    <?php if(Mage::getSingleton('admin/session')->isAllowed('salesman/commission/actions/salesman')){ ?>
     <b style="margin-left: 10px;"><?php echo $this->__('Salesman:') ?></b>
     <div class="multiselect" style="display: inline-block; width: 10%;">
         <div class="selectBox" onclick="showCheckboxes()">
@@ -104,6 +110,8 @@
             <?php endforeach; ?>
         </div>
     </div>
+    <?php } ?>
+
     <br>
 </div>
 <button id="id_d601ae8e4cb58942bcd7ddc9060ff6ea" title="Reset Filter" type="button" class="scalable "

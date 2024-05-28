@@ -13,10 +13,30 @@ class Ccc_Salesman_Block_Adminhtml_Bonus_Tab_League extends Mage_Adminhtml_Block
         $data = Mage::getModel('salesman/bonus')->load($id);
         return $data->getUsersInLeague();   
     }
+    public function getRank()
+    {
+        $id = $this->getRequest()->getParam('id');
+        $data = Mage::getModel('salesman/bonus')->load($id);
+        return $data->getRank();   
+    }
     
     public function CreateCollection()
     {
         $id = $this->getRequest()->getParam('id');
+        $leagueUser = Mage::getModel('salesman/bonusLeagueUser')->getCollection();
+        $leagueUser->getSelect()->join(
+            array('salesman' => Mage::getSingleton('core/resource')->getTableName('admin/user')),
+            'main_table.user_id = salesman.user_id',
+            array('username' => 'salesman.username')
+        );
+        if($leagueUser->addFieldToFilter('configuration_id',$id)->getData()){
+            $data =  $leagueUser->getData();
+            $leagueNumbers = array_column($data, 'league_number');
+            $ranks = array_column($data, 'rank');
+
+            array_multisort($leagueNumbers, SORT_ASC, $ranks, SORT_ASC, $data);
+            return $data;
+        }
         $data = Mage::getModel('salesman/bonus')->load($id);
         $group = $data->getUsersInLeague();
         $bonusMetric = $data->getMetric();

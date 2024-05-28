@@ -1,12 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
 
   var selectedSalesmen = [];
-
-  document.getElementById("checkboxes").addEventListener("change", function () {
-    selectedSalesmen = Array.from(
-      document.querySelectorAll("#checkboxes input[type='checkbox']:checked")
-    ).map((option) => option.value);
-  });
+  if (document.getElementById("checkboxes")){
+    document
+    .getElementById("checkboxes")
+    .addEventListener("change", function () {
+      selectedSalesmen = Array.from(
+        document.querySelectorAll(
+          "#checkboxes input[type='checkbox']:checked"
+        )
+      ).map((option) => option.value);
+    });
+  }
   varienGrid.prototype.doFilter = function () {
     var filters = $$(
       "#" + this.containerId + " .filter input",

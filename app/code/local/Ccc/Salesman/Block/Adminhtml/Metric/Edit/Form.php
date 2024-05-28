@@ -52,12 +52,7 @@ class Ccc_Salesman_Block_Adminhtml_Metric_Edit_Form extends Mage_Adminhtml_Block
                 'options' => $option,
             )
         );
-
-        // $metrics = [];
-        // $constModel = new ReflectionClass('Ccc_Salesman_Model_Metric');
-        // foreach($constModel->getConstants() as $const){
-        //     $metrics[$const] = Mage::helper('salesman')->__("$const");
-        // }
+        
         $fieldset->addField(
             'metric',
             'select',
@@ -68,9 +63,9 @@ class Ccc_Salesman_Block_Adminhtml_Metric_Edit_Form extends Mage_Adminhtml_Block
                 'required' => true,
                 // 'options' => $metrics
                 'options' => array(
-                    Ccc_Salesman_Model_Metric::PRODUCT_METRIC,
-                    Ccc_Salesman_Model_Metric::SHIPPING_METRIC,
-                    Ccc_Salesman_Model_Metric::TAX_METRIC,
+                    Ccc_Salesman_Model_Metric::PRODUCT_METRIC => Mage::helper('salesman')->__('Product'),
+                    Ccc_Salesman_Model_Metric::SHIPPING_METRIC => Mage::helper('salesman')->__('Shipping'),
+                    Ccc_Salesman_Model_Metric::TAX_METRIC => Mage::helper('salesman')->__('Tax'),
                 )
             )
         );

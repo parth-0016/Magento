@@ -34,8 +34,32 @@
 
     <acl>
         <resources>
+            <all>
+                    <title>Allow Everything</title>
+            </all>
             <admin>
                 <children>
+                    <salesman translate="title" module="salesman">
+                        <title>Salesman</title>
+                        <sort_order>60</sort_order>
+                        <children>
+                            <commission module="salesman">
+                                <title>Commission Report</title>
+                                <sort_order>20</sort_order>
+                                <children>
+                                    <actions translate="title">
+                                        <title>Actions</title>
+                                        <children>
+                                            <index translate="title"><title>Index</title></index>
+                                            <from translate="title"><title>From</title></from>
+                                            <to translate="title"><title>To</title></to>
+                                            <salesman translate="title"><title>Salesman</title></salesman>
+                                        </children>
+                                    </actions>        
+                                </children>
+                            </commission>
+                        </children>
+                    </salesman>
                     <system>
                         <children>
                             <config>
@@ -43,6 +67,9 @@
                                     <salesman>
                                         <title>Bonus Changes</title>
                                     </salesman>
+                                    <salesmann>
+                                        <title>Assign Percentage</title>
+                                    </salesmann>
                                 </children>
                             </config>
                         </children>

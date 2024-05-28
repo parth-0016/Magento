@@ -53,8 +53,6 @@
 
 	<adminhtml_bonus_configuration>
         <reference name="head">
-			<!-- <action method="addJs"><file>lib/jquery/jquery-1.12.1.min.js</file></action> -->
-			<!-- <action method="addItem"><type>skin_js</type><name>js/jquery-ui.min.js</name></action> -->
             <action method="addJs">
                 <src>lib/jquery/jquery-1.12.1.min.js</src>
             </action>

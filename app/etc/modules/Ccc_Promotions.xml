@@ -1,0 +1,9 @@
+<config>
+  <modules>
+    <Ccc_Promotions>
+      <active>true</active>
+      <codePool>local</codePool>
+      <version>1.6.0.0.1</version>
+    </Ccc_Promotions>
+  </modules>
+</config>

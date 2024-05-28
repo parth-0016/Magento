@@ -89,23 +89,79 @@ class Ccc_Salesman_Adminhtml_BonusController extends Mage_Adminhtml_Controller_A
 
     public function leagueAction()
     {
-        // Mage::dispatchEvent('bonus_config_data', array('request' => $this->getRequest()->getParams()));
         $this->loadLayout();
 
         $this->_addContent(
             $this->getLayout()->createBlock('salesman/adminhtml_bonus_tab_league')
         );
-        Mage::register('bonus_league', $this->getLayout()->createBlock('salesman/adminhtml_bonus_Tab_league'));
+        Mage::register('bonus_league', 'bonus');
         $this->renderLayout();
     }
 
-    public function dataAction(){
-        $bonus = Mage::getStoreConfig('salesman/bonus/amount');
-        $cardData = json_decode($this->getRequest()->getParam('data'),true);
-        // echo "<pre>";
-        // print_r($cardData);
-        // echo "</pre>";
-        $response['success'] = true;
-        echo json_encode($response);
+    public function dataAction()
+    {
+        $cardData = $this->getRequest()->getParams();
+        $leagueData = json_decode($cardData['data']);
+        $configId = $cardData['config_id'];
+        $model = Mage::getModel('salesman/bonusLeagueUser');
+        $existingData = $model->getCollection()
+            ->addFieldToFilter('configuration_id', $configId)
+            ->addFieldToSelect('user_id')
+            ->addFieldToSelect('entity_id');
+
+        $existingDataArray = [];
+        foreach ($existingData as $item) {
+            $existingDataArray[$item->getUserId()] = $item->getEntityId();
+        }
+        foreach ($leagueData as $leagueNumber => $league) {
+            $leagueNumber = str_replace('league_', '', $leagueNumber);
+            $bonusArray = [];
+            foreach ($league->bonus as $username => $bonus) {
+                $bonusArray[] = $bonus;
+            }
+            $rank = 1;
+
+            foreach ($league->users as $username) {
+                $userId = $this->getUserIdByUsername($username);
+                if ($userId) {
+                    $bonus = isset($bonusArray[$rank - 1]) ? $bonusArray[$rank - 1] : 0;
+                    $data = [
+                        'configuration_id' => $configId,
+                        'league_number' => $leagueNumber,
+                        'user_id' => $userId,
+                        'rank' => $rank,
+                        'bonus' => $bonus,
+                    ];
+                    try {
+                        if (isset($existingDataArray[$userId])) {
+                            $entityId = $existingDataArray[$userId];
+                            $existingRecord = $model->load($entityId);
+                            $existingRecord->setData('bonus', $data['bonus']);
+                            $existingRecord->setData('league_number', $data['league_number']);
+                            $existingRecord->setData('rank', $data['rank']);
+                            $existingRecord->save();
+                        } else {
+                            $newRecord = Mage::getModel('salesman/bonusLeagueUser');
+                            $newRecord->setData($data);
+                            $newRecord->save();
+                        }
+                    } catch (Exception $e) {
+                        Mage::log('Error saving data: ' . $e->getMessage());
+                    }
+                    $rank++;
+                }
+            }
+        }
+    }
+
+    private function getUserIdByUsername($username)
+    {
+        $user = Mage::getModel('admin/user')->getCollection()
+            ->addFieldToFilter('username', $username)
+            ->getFirstItem();
+        if ($user->getId()) {
+            return $user->getId();
+        }
+        return null;
     }
 }
