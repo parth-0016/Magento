@@ -20,7 +20,7 @@ document.observe("dom:loaded", function () {
             reportDiv.innerHTML =
               "<p>No products found for the selected tag.</p>";
           } else {
-            var table = new Element("table");
+            var table = new Element("table", { class: "styled-table" });
             var header = table.createTHead();
             var headerRow = header.insertRow(0);
             var keys = Object.keys(products[0]);
@@ -28,6 +28,7 @@ document.observe("dom:loaded", function () {
             keys.forEach(function (key, index) {
               var cell = headerRow.insertCell(index);
               cell.innerHTML = key;
+              cell.className = "header-cell";
             });
 
             var tbody = table.createTBody();
@@ -36,7 +37,9 @@ document.observe("dom:loaded", function () {
               keys.forEach(function (key, index) {
                 var cell = row.insertCell(index);
                 cell.innerHTML = product[key];
+                cell.className = "body-cell";
               });
+              row.className = "body-row";
             });
 
             reportDiv.appendChild(table);
